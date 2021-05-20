@@ -1,5 +1,7 @@
 package com.iftm.client.services;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -28,6 +30,20 @@ public class ClientService {
 	public Page<ClientDTO> findAllPaged(PageRequest pageRequest) {
 		Page<Client> list =  repository.findAll(pageRequest);
 		return list.map(x -> new ClientDTO(x));
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<ClientDTO> findByIncome(Double income, PageRequest pageRequest) {
+		Page<Client> list =  repository.findByIncome(income, pageRequest);
+		return list.map(x -> new ClientDTO(x));
+	}
+	
+	public List<Client> findByName(String name) {
+		return repository.findByNameContainingIgnoreCase(name);
+	}
+	
+	public List<Client> findByBirthDate(Instant instant) {
+		return repository.findByBirthDate(instant);
 	}
 	
 	@Transactional(readOnly = true)

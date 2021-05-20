@@ -1,6 +1,10 @@
 package com.iftm.client.resources;
 
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.iftm.client.dto.ClientDTO;
+import com.iftm.client.entities.Client;
 import com.iftm.client.services.ClientService;
 
 @RestController
@@ -40,10 +45,42 @@ public class ClientResource {
 		return ResponseEntity.ok().body(list);
 	}
 	
+	@GetMapping(value = "/find-by-income")
+	public ResponseEntity<Page<ClientDTO>> findByIncome(
+			@RequestParam(value = "income", defaultValue = "0") Double income,
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy)
+	{
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Page<ClientDTO> list = service.findByIncome(income, pageRequest);
+		return ResponseEntity.ok().body(list);
+	}
+	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ClientDTO> findById(@PathVariable Long id) {
 		ClientDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto);
+	}
+	
+	@GetMapping(value = "/name/{name}")
+	public List<Client> findByName(@PathVariable String name) {
+		System.out.println(name);
+		return service.findByName(name);
+	}
+	
+	@GetMapping(value = "/date/{date}")
+	public List<Client> findByBirthDate(@PathVariable String date) throws ParseException {
+		SimpleDateFormat df;
+		if(date.length() == 4) {
+			df = new SimpleDateFormat("yyyy");
+		} else {
+			df = new SimpleDateFormat("yyyy-MM-dd");
+		}
+		
+		Date newDate = df.parse(date);
+		return service.findByBirthDate(newDate.toInstant());
 	}
 	
 	@PostMapping
