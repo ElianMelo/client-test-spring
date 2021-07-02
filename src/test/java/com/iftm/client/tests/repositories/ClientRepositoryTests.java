@@ -36,7 +36,6 @@ public class ClientRepositoryTests {
 		countClientByIncome = 5L;
 	}
 	
-	
 	@Test
 	public void deleteShouldDeleteObjectWhenIdExists() {
 		repository.deleteById(existingId);

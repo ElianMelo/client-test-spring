@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -72,7 +73,8 @@ public class ClientServiceTests {
 		Mockito.doThrow(ResourceNotFoundException.class).when(repository).findById(nonExistingId);
 		
 		Mockito.when(repository.findAll(pageRequest)).thenReturn(pageMock);
-		Mockito.when(repository.findByIncome(income, pageRequest)).thenReturn(pageMock);
+		Mockito.when(repository.findByIncome(ArgumentMatchers.anyDouble(), ArgumentMatchers.any()))
+			.thenReturn(pageMock);
 		Mockito.when(repository.save(client)).thenReturn(client);
 		Mockito.when(repository.getOne(existingId)).thenReturn(client);
 		
