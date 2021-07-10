@@ -11,8 +11,16 @@ public class ClientFactory {
 		return new Client(13L, "Pablo Alberto", "1051082519", 2000.0, Instant.parse("1958-09-20T08:00:00Z"), 1);
 	}
 	
+	public static Client createClient(Long id) {
+		return new Client(id, "Pablo Alberto", "1051082519", 2000.0, Instant.parse("1958-09-20T08:00:00Z"), 1);
+	}
+	
 	public static ClientDTO createClientDTO() {
 		return new ClientDTO(createClient());
+	}
+	
+	public static ClientDTO createClientDTO(Long id) {
+		return new ClientDTO(createClient(id));
 	}
 	
 }
